@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── CSS Variables ──────────────────────────────────────────────────────── */
+:root {
+  --blur-amount: 22px;
+  --blur-scale: 1.02;
+  --blur-overlay-color: rgba(0, 0, 0, 0.18);
+  --blur-transition-duration: 400ms;
+
+  /* Photo Booth palette */
+  --pb-toolbar-bg: #1c1c1e;
+  --pb-toolbar-border: rgba(255,255,255,0.08);
+  --pb-bezel: #2a2a2c;
+  --pb-bezel-inner: #111;
+  --pb-shutter-red: #e5342a;
+  --pb-shutter-red-hover: #ff4438;
+  --pb-shutter-ring: rgba(255,255,255,0.18);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #0a0a0a;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Camera mirror ──────────────────────────────────────────────────────── */
+.camera-mirror { transform: scaleX(-1); }
+
+/* ─── FPS mono font ──────────────────────────────────────────────────────── */
+.fps-counter {
+  font-family: "SF Mono", "Fira Code", "Courier New", monospace;
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+/* ─── Toolbar glass ──────────────────────────────────────────────────────── */
+.pb-toolbar {
+  background: linear-gradient(180deg, #2c2c2e 0%, #1c1c1e 100%);
+  border-top: 1px solid var(--pb-toolbar-border);
+  box-shadow: 0 -1px 0 rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* ─── Shutter button ─────────────────────────────────────────────────────── */
+.pb-shutter {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #ff6b63, var(--pb-shutter-red) 55%, #8b1a14);
+  box-shadow:
+    0 0 0 3px var(--pb-shutter-ring),
+    0 4px 12px rgba(229,52,42,0.55),
+    inset 0 1px 0 rgba(255,255,255,0.25),
+    inset 0 -2px 4px rgba(0,0,0,0.35);
+  transition: transform 90ms ease, box-shadow 90ms ease;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+.pb-shutter:hover {
+  background: radial-gradient(circle at 40% 35%, #ff8078, var(--pb-shutter-red-hover) 55%, #9e2018);
+  box-shadow:
+    0 0 0 3px var(--pb-shutter-ring),
+    0 6px 18px rgba(229,52,42,0.7),
+    inset 0 1px 0 rgba(255,255,255,0.3),
+    inset 0 -2px 4px rgba(0,0,0,0.3);
+}
+.pb-shutter:active {
+  transform: scale(0.93);
+  box-shadow:
+    0 0 0 3px var(--pb-shutter-ring),
+    0 2px 6px rgba(229,52,42,0.4),
+    inset 0 2px 6px rgba(0,0,0,0.5);
+}
+
+/* ─── Filmstrip thumbnail ────────────────────────────────────────────────── */
+.pb-thumb {
+  border: 1.5px solid rgba(255,255,255,0.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6);
+  transition: transform 120ms ease, border-color 120ms ease;
+}
+.pb-thumb:hover {
+  transform: scale(1.06);
+  border-color: rgba(255,255,255,0.35);
+}
+
+/* ─── Video bezel ────────────────────────────────────────────────────────── */
+.pb-bezel {
+  box-shadow:
+    inset 0 0 0 1px rgba(255,255,255,0.07),
+    0 8px 40px rgba(0,0,0,0.9),
+    0 2px 8px rgba(0,0,0,0.6);
+}
+
+/* ─── Scrollbar hide ─────────────────────────────────────────────────────── */
+::-webkit-scrollbar { display: none; }
