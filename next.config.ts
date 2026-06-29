@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 // Repository name on GitHub — must match exactly (case-sensitive)
 // https://farrelberwyn.github.io/FotoBloorth/
-const REPO_NAME = "FotoBloorth";
+const REPO_NAME = "Blurmatix";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
