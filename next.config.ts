@@ -1,29 +1,25 @@
 import type { NextConfig } from "next";
 
-const isProd = process.env.NODE_ENV === "production";
-
-// Ganti "foto-kita-blur" dengan nama repository GitHub kamu
-// Contoh: repo kamu adalah github.com/username/foto-kita-blur → "/foto-kita-blur"
-// Kalau pakai custom domain / GitHub Pages root → set ke ""
-const REPO_NAME = process.env.NEXT_PUBLIC_BASE_PATH ?? "FotoBloorth";
+// Repository name on GitHub — must match exactly (case-sensitive)
+// https://farrelberwyn.github.io/FotoBloorth/
+const REPO_NAME = "FotoBloorth";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // Static export — generate pure HTML/CSS/JS, no server needed
+  // Static export — pure HTML/CSS/JS, no Node server needed
   output: "export",
 
-  // Required for GitHub Pages subdirectory deployment
-  // e.g. https://username.github.io/foto-kita-blur/
-  basePath: isProd && REPO_NAME ? `/${REPO_NAME}` : "",
-  assetPrefix: isProd && REPO_NAME ? `/${REPO_NAME}/` : "",
+  // GitHub Pages serves from /REPO_NAME/ — these must always be set
+  basePath: `/${REPO_NAME}`,
+  assetPrefix: `/${REPO_NAME}/`,
 
-  // Disable image optimization (not supported in static export)
+  // Image optimization not supported in static export
   images: {
     unoptimized: true,
   },
 
-  // Trailing slash for GitHub Pages compatibility
+  // Trailing slash for GitHub Pages directory routing
   trailingSlash: true,
 };
 
