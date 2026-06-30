@@ -100,5 +100,423 @@ html, body {
     0 2px 8px rgba(0,0,0,0.6);
 }
 
+/* ─── Photobooth Full Screen ──────────────────────────────────────────── */
+
+.booth-fullscreen {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0f1923;
+}
+
+/* ─── Photobooth Machine ─────────────────────────────────────────────── */
+
+.booth-machine {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #1a2332;
+  position: relative;
+  z-index: 2;
+}
+
+/* ── Left Panel ────────────────────────────── */
+.booth-left-panel {
+  flex: 0 0 22%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(180deg, #1e2a3a 0%, #172030 50%, #131c28 100%);
+  border-right: 2px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.booth-left-panel::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  right: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.06), transparent);
+}
+
+.booth-logo-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+}
+
+.booth-logo-mark {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
+}
+
+.booth-brand-text {
+  text-align: center;
+}
+
+.booth-brand-name {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: 1.65rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.92);
+  letter-spacing: 0.01em;
+  line-height: 1.1;
+  margin: 0;
+}
+
+.booth-brand-sub {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.28em;
+  margin-top: 0.35rem;
+  text-transform: uppercase;
+}
+
+/* ── Center — Curtain ──────────────────────── */
+.booth-center-area {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 16px 0;
+  background: #0c1520;
+  position: relative;
+}
+
+.booth-curtain-frame {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.booth-curtain-topbar {
+  height: 12px;
+  flex-shrink: 0;
+  background: linear-gradient(180deg, #2a3848 0%, #1e2c3a 100%);
+  border-bottom: 1px solid rgba(0,0,0,0.3);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.booth-curtain-img {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.booth-curtain-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: brightness(0.45) saturate(0.8);
+}
+
+.booth-curtain-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(12,21,32,0.6) 0%, transparent 15%, transparent 85%, rgba(12,21,32,0.7) 100%),
+    radial-gradient(ellipse 80% 100% at 50% 50%, transparent 40%, rgba(0,0,0,0.4) 100%);
+  pointer-events: none;
+}
+
+/* ── Right Panel — Controls ────────────────── */
+.booth-right-panel {
+  flex: 0 0 24%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem 1.5rem;
+  background: linear-gradient(180deg, #1e2a3a 0%, #172030 50%, #131c28 100%);
+  border-left: 2px solid rgba(255, 255, 255, 0.04);
+  position: relative;
+}
+
+.booth-right-panel::after {
+  content: "";
+  position: absolute;
+  top: 12%;
+  bottom: 12%;
+  left: 0;
+  width: 1px;
+  background: linear-gradient(180deg, transparent, rgba(255,255,255,0.06), transparent);
+}
+
+/* ── Start Button ──────────────────────────── */
+.booth-start-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1.5rem 2rem;
+  border-radius: 16px;
+  background: linear-gradient(180deg, #243445 0%, #1a2838 100%);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  color: white;
+  outline: none;
+}
+
+.booth-start-btn:hover {
+  background: linear-gradient(180deg, #2c3e50 0%, #1e3040 100%);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.booth-start-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.booth-start-text {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+}
+
+/* ── Photostrip ────────────────────────────── */
+.booth-photostrip-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.booth-photostrip-icon {
+  width: 36px;
+  height: 36px;
+}
+
+.booth-photostrip-label {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+}
+
+.booth-photostrip-sublabel {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
+  font-size: 0.52rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.22);
+  text-transform: uppercase;
+  margin-top: -4px;
+}
+
+/* ── Print Slot Container ──────────────────── */
+.booth-print-slot-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.booth-print-slot {
+  width: 55%;
+  height: 8px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, #0c1520 0%, #111c28 100%);
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 0 2px 4px rgba(0, 0, 0, 0.6),
+    0 1px 0 rgba(255, 255, 255, 0.04);
+  position: relative;
+  z-index: 10;
+}
+
+/* ── Photostrip Output ─────────────────────── */
+.booth-strip-output {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  z-index: 5;
+}
+
+.booth-strip-image {
+  width: 140px;
+  border-radius: 8px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.booth-strip-image:hover {
+  transform: scale(1.03);
+}
+
+.booth-strip-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.booth-strip-download-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 12px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #30d158 0%, #28a745 100%);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(48, 209, 88, 0.35);
+  cursor: pointer;
+  outline: none;
+  text-transform: uppercase;
+}
+
+.booth-strip-download-btn:hover {
+  background: linear-gradient(180deg, #3bdf65 0%, #32b850 100%);
+}
+
+.booth-strip-clear-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.booth-strip-clear-btn:hover {
+  background: rgba(229, 52, 42, 0.2);
+  border-color: rgba(229, 52, 42, 0.4);
+  color: rgba(229, 52, 42, 0.8);
+}
+
+/* ── Responsive adjustments ────────────────── */
+@media (max-width: 768px) {
+  .booth-machine {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    overflow-y: auto;
+  }
+
+  .booth-left-panel {
+    flex: 0 0 auto;
+    flex-direction: row;
+    padding: 1.2rem 1.5rem;
+    border-right: none;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.04);
+  }
+
+  .booth-left-panel::after {
+    display: none;
+  }
+
+  .booth-logo-area {
+    flex-direction: row;
+    gap: 0.8rem;
+  }
+
+  .booth-logo-mark {
+    width: 44px;
+    height: 44px;
+  }
+
+  .booth-logo-mark svg {
+    width: 32px;
+    height: 32px;
+  }
+
+  .booth-brand-name {
+    font-size: 1.2rem;
+  }
+
+  .booth-brand-sub {
+    font-size: 0.6rem;
+  }
+
+  .booth-brand-text {
+    text-align: left;
+  }
+
+  .booth-center-area {
+    flex: 0 0 200px;
+    padding: 8px 0;
+  }
+
+  .booth-right-panel {
+    flex: 0 0 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    border-left: none;
+    border-top: 2px solid rgba(255, 255, 255, 0.04);
+    justify-content: center;
+  }
+
+  .booth-right-panel::after {
+    display: none;
+  }
+
+  .booth-start-btn {
+    flex-direction: row;
+    padding: 1rem 1.5rem;
+    gap: 0.6rem;
+  }
+
+  .booth-start-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .booth-photostrip-area {
+    display: none;
+  }
+
+  .booth-print-slot-container {
+    display: none;
+  }
+}
+
 /* ─── Scrollbar hide ─────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { display: none; }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useEffect, useState, useCallback } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useCamera } from "@/app/hooks/useCamera";
 import { useHandDetection } from "@/app/hooks/useHandDetection";
@@ -17,8 +18,10 @@ interface Thumbnail {
 }
 
 const MAX_THUMBS = 6;
+const PHOTOSTRIP_COUNT = 3;
 
 export default function Camera() {
+  const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -26,6 +29,7 @@ export default function Camera() {
   const [thumbnails, setThumbnails] = useState<Thumbnail[]>([]);
   const [selectedThumb, setSelectedThumb] = useState<string | null>(null);
   const [shutterPressed, setShutterPressed] = useState(false);
+  const [photostripReady, setPhotostripReady] = useState(false);
   const prevBlurRef = useRef(false);
   const thumbIdRef = useRef(0);
 
@@ -52,6 +56,16 @@ export default function Camera() {
     startCamera();
     initModel();
   }, [startCamera, initModel]);
+
+  // Save photos to localStorage when we have 3+ and navigate back
+  useEffect(() => {
+    if (thumbnails.length >= PHOTOSTRIP_COUNT && !photostripReady) {
+      setPhotostripReady(true);
+      // Save the latest 3 photos to localStorage
+      const latestPhotos = thumbnails.slice(-PHOTOSTRIP_COUNT).map((t) => t.dataUrl);
+      localStorage.setItem("blurmatix-photostrip", JSON.stringify(latestPhotos));
+    }
+  }, [thumbnails, photostripReady]);
 
   /** Grab a frame from the video and add to filmstrip */
   const captureSnapshot = useCallback(() => {
@@ -96,6 +110,27 @@ export default function Camera() {
     initModel();
   }, [startCamera, initModel]);
 
+  /** Back button — navigate to home */
+  const handleBack = useCallback(() => {
+    // Stop camera stream before navigating
+    const video = videoRef.current;
+    if (video && video.srcObject) {
+      const stream = video.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    router.push("/");
+  }, [router]);
+
+  /** Finish & go home with photostrip */
+  const handleFinish = useCallback(() => {
+    const video = videoRef.current;
+    if (video && video.srcObject) {
+      const stream = video.srcObject as MediaStream;
+      stream.getTracks().forEach((track) => track.stop());
+    }
+    router.push("/");
+  }, [router]);
+
   // ── Error screens ────────────────────────────────────────────────────────────
   if (permissionGranted === false && permissionError) {
     return <ErrorScreen icon="📷" title="Izin Kamera Diperlukan" message={permissionError} onRetry={handleRetry} />;
@@ -121,15 +156,28 @@ export default function Camera() {
           boxShadow: "inset 0 1px 0 rgba(255,255,255,0.07)",
         }}
       >
-        {/* Traffic light dots */}
+        {/* Traffic light dots — red is back button */}
         <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full" style={{ background: "#e5342a", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3)" }} />
+          <button
+            onClick={handleBack}
+            className="w-3 h-3 rounded-full flex items-center justify-center group relative"
+            style={{ background: "#e5342a", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3)" }}
+            aria-label="Kembali"
+          >
+            <svg
+              className="w-2 h-2 opacity-0 group-hover:opacity-100 transition-opacity"
+              viewBox="0 0 8 8"
+              fill="none"
+            >
+              <path d="M1.5 1.5L6.5 6.5M6.5 1.5L1.5 6.5" stroke="rgba(0,0,0,0.7)" strokeWidth="1.2" strokeLinecap="round" />
+            </svg>
+          </button>
           <div className="w-3 h-3 rounded-full" style={{ background: "#f5a623", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3)" }} />
           <div className="w-3 h-3 rounded-full" style={{ background: "#30d158", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.3)" }} />
         </div>
         {/* App name */}
         <span className="text-[13px] font-medium" style={{ color: "rgba(255,255,255,0.55)" }}>
-          Foto Kita Blur
+          Blurmatix
         </span>
         <div className="w-16" />
       </div>
@@ -156,8 +204,6 @@ export default function Camera() {
 
             {/* Blur overlay */}
             <BlurOverlay isBlurred={blurActive} showFlash={showFlash} />
-
-            {/* Floating love emojis — REMOVED from inside bezel, now rendered at page level */}
 
             {/* Loading skeleton */}
             <AnimatePresence>
@@ -227,8 +273,6 @@ export default function Camera() {
         </div>
 
       {/* ── Floating love emojis — page-level, always on top ────────── */}
-      {/* Anchored at bottom-left, aligned with toolbar left edge.        */}
-      {/* anchorBottom = toolbar height (76) + filmstrip (72) + padding   */}
       <FloatingEmojis
         active={blurActive}
         anchorLeft={24}
@@ -299,25 +343,50 @@ export default function Camera() {
             aria-label="Take photo"
             style={{ opacity: !cameraReady ? 0.4 : 1 }}
           />
+          {/* Photo counter */}
+          {thumbnails.length > 0 && (
+            <span className="text-[10px] font-medium" style={{ color: "rgba(255,255,255,0.35)" }}>
+              {thumbnails.length} / {PHOTOSTRIP_COUNT}
+            </span>
+          )}
         </div>
 
-        {/* Right: gesture indicator */}
+        {/* Right: finish button or gesture indicator */}
         <div className="flex items-center justify-end gap-2 w-24">
-          <div
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
-            <span
-              className="w-1.5 h-1.5 rounded-full"
-              style={{ background: isPeace ? "#30d158" : "rgba(255,255,255,0.2)" }}
-            />
-            <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>
-              ✌️
-            </span>
-          </div>
+          {photostripReady ? (
+            <motion.button
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleFinish}
+              className="px-3 py-1.5 rounded-lg text-[11px] font-semibold uppercase tracking-wide"
+              style={{
+                background: "linear-gradient(180deg, #30d158 0%, #28a745 100%)",
+                color: "#fff",
+                border: "1px solid rgba(255,255,255,0.1)",
+                boxShadow: "0 2px 8px rgba(48,209,88,0.4)",
+              }}
+            >
+              Selesai
+            </motion.button>
+          ) : (
+            <div
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-full"
+              style={{
+                background: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.08)",
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full"
+                style={{ background: isPeace ? "#30d158" : "rgba(255,255,255,0.2)" }}
+              />
+              <span className="text-[11px]" style={{ color: "rgba(255,255,255,0.35)" }}>
+                ✌️
+              </span>
+            </div>
+          )}
         </div>
       </div>
 
@@ -364,7 +433,7 @@ export default function Camera() {
               {/* Download button */}
               <a
                 href={selectedThumb}
-                download="foto-kita-blur.jpg"
+                download="blurmatix-photo.jpg"
                 onClick={(e) => e.stopPropagation()}
                 className="absolute bottom-3 right-3 px-3 py-1.5 rounded-lg text-[12px] font-medium text-white"
                 style={{ background: "rgba(229,52,42,0.85)", border: "1px solid rgba(255,255,255,0.1)" }}
