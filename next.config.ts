@@ -1,25 +1,25 @@
 import type { NextConfig } from "next";
 
-// Repository name on GitHub — must match exactly (case-sensitive)
-// https://farrelberwyn.github.io/FotoBloorth/
+// Repository name — used for GitHub Pages deployment
 const REPO_NAME = "Blurmatix";
+
+// Only apply basePath/assetPrefix during production build (GitHub Actions sets NODE_ENV=production)
+const isProd = process.env.NODE_ENV === "production";
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
-  // Static export — pure HTML/CSS/JS, no Node server needed
+  // Static export for GitHub Pages
   output: "export",
 
-  // GitHub Pages serves from /REPO_NAME/ — these must always be set
-  basePath: `/${REPO_NAME}`,
-  assetPrefix: `/${REPO_NAME}/`,
+  // basePath only in production so local dev works at http://localhost:3000
+  basePath: isProd ? `/${REPO_NAME}` : "",
+  assetPrefix: isProd ? `/${REPO_NAME}/` : "",
 
-  // Image optimization not supported in static export
   images: {
     unoptimized: true,
   },
 
-  // Trailing slash for GitHub Pages directory routing
   trailingSlash: true,
 };
 
